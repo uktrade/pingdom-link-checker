@@ -3,7 +3,7 @@ from subprocess import call
 
 class run_check(object):
 
-	def __init__(self, interval=60):
+	def __init__(self, interval=300):
 		self.interval = interval
 
 		thread = threading.Thread(target=self.run, args=())
@@ -45,7 +45,7 @@ class run_check(object):
 				with open('app/templates/check.xml','w') as out:
 					xml_out_3 = "<status>Dead Links Found</status>"
 					xml_out_4 = "<response_time>%.2f</response_time>" % total_time
-					out.write('{}\n{}\n{}\n{}\n'.format(xml_out_1,xml_out_2,xml_out_3,xml_out_4,xml_out_5))
+					out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1,xml_out_2,xml_out_3,xml_out_4,xml_out_5))
 
 			if ( dead_link_found == False ):
 				with open('app/templates/check.xml','w') as out:
