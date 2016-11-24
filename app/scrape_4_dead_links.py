@@ -49,7 +49,7 @@ class run_check(object):
 
 			if ( dead_link_found == False ):
 				with open('app/templates/check.xml','w') as out:
-					xml_out_3 = "<status>ok</status>"
+					xml_out_3 = "<status>OK</status>"
 					xml_out_4 = "<response_time>%.2f</response_time>" % total_time
 					out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1,xml_out_2,xml_out_3,xml_out_4,xml_out_5))
 			time.sleep(self.interval)
