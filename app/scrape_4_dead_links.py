@@ -3,10 +3,9 @@ from subprocess import call
 
 class run_check(object):
 
-	def __init__(self):#, interval=3000):
-		#self.interval = interval
+	def __init__(self):
+
 		self.interval = int(os.environ.get('CHECK_INTERVAL'))
-		#print os.environ.get('CHECK_INTERVAL')
 		
 		print "This check will run every %ds"  % self.interval
 		
