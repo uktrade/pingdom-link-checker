@@ -3,9 +3,13 @@ from subprocess import call
 
 class run_check(object):
 
-	def __init__(self, interval=3000):
-		self.interval = interval
-
+	def __init__(self):#, interval=3000):
+		#self.interval = interval
+		self.interval = int(os.environ.get('CHECK_INTERVAL'))
+		#print os.environ.get('CHECK_INTERVAL')
+		
+		print "This check will run every %ds"  % self.interval
+		
 		thread = threading.Thread(target=self.run, args=())
 		thread.daemon = True                            # Daemonize thread
 		thread.start()                  
@@ -27,38 +31,40 @@ class run_check(object):
 			t0 = time.time()
 
 			with open('app/templates/deadlinks.html','w') as out:
-				out.write ('{}\n{}\n{}\n{}\n'.format('<html>','<body>','<h1>Link check logs</h1>','<p>'))
+				out.write ('{}\n{}\n{}\n{}\n'.format('<html>','<body>','<h1>Link check - logs</h1>','<p>'))
 
 
 			for current_url in url_contents:
-				FourOFour = 0
-				print "%s" % current_url
-				with open('app/templates/deadlinks.html','a') as out:
-					out.write ('{}{}\n'.format(current_url,'<br/>'))
-				subprocess.call (["wget", "--spider", "-o", "dead_link.log", "-e", "robots=off", "-w", "1", "-r", "-p", current_url ])
-				
-				with open('dead_link.log') as inFile:
-					for line in inFile:
-						if '--20' in line:
-							url_checked = line
+				if not current_url.startswith("#"):
+					
+					FourOFour = 0
+					print "%s" % current_url
+					with open('app/templates/deadlinks.html','a') as out:
+						out.write ('{}'.format(current_url))
+					subprocess.call (["wget", "--spider", "-o", "dead_link.log", "-e", "robots=off", "-w", "1", "-r", "-p", current_url ])
+					
+					with open('dead_link.log') as inFile:
+						for line in inFile:
+							if '--20' in line:
+								url_checked = line
 
-						if '404' in line:
-							FourOFour += 1
-							print line
-							print url_checked
-							with open('app/templates/deadlinks.html','a') as out:
-								out.write ('{}{}{}\n'.format('404 - ',url_checked,'<br/>'))
+							if '404' in line:
+								FourOFour += 1
+								print line
+								print url_checked
+								with open('app/templates/deadlinks.html','a') as out:
+									out.write ('{}{}\n{}{}{}\n'.format(' - FAILED','<br/>','404 - ',url_checked,'<br/>'))
 
-							dead_link_found = True
+								dead_link_found = True
 
-				print "Number of Dead Links: %d" %FourOFour
-				with open('app/templates/deadlinks.html','a') as out:
-					if (FourOFour == 0 ):
-						out.write ('{}{}\n'.format(' - GOOD', '<br/>'))
+					print "Number of Dead Links: %d" %FourOFour
+					with open('app/templates/deadlinks.html','a') as out:
+						if (FourOFour == 0 ):
+							out.write ('{}{}\n'.format(' - GOOD', '<br/>'))
 
 
 			with open('app/templates/deadlinks.html','a') as out:
-				out.write ('{}\n{}\n{}\n'.format('</p>','</body>','</html>'))
+				out.write ('{}\n{}\n{}\n{}\n'.format('--  All Sites Checked --','</p>','</body>','</html>'))
 
 
 			t1 = time.time()
