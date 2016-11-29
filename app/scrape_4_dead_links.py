@@ -15,6 +15,8 @@ class run_check(object):
 
 	def run(self):
 		""" Method that runs forever """
+		check_log_url = "https://pingdom-link-checker.herokuapp.com/logs.html"
+
 		while True:
 		
 			#print('Doing something imporant in the background')
@@ -29,7 +31,7 @@ class run_check(object):
 			dead_link_found = False
 			t0 = time.time()
 
-			with open('app/templates/deadlinks.html','w') as out:
+			with open('app/templates/logs.html','w') as out:
 				out.write ('{}\n{}\n{}\n{}\n'.format('<html>','<body>','<h1>Link check - logs</h1>','<p>'))
 
 
@@ -38,7 +40,7 @@ class run_check(object):
 					
 					FourOFour = 0
 					print "%s" % current_url
-					with open('app/templates/deadlinks.html','a') as out:
+					with open('app/templates/logs.html','a') as out:
 						out.write ('{}'.format(current_url))
 					subprocess.call (["wget", "--spider", "-o", "dead_link.log", "-e", "robots=off", "-w", "1", "-r", "-p", current_url ])
 					
@@ -51,18 +53,18 @@ class run_check(object):
 								FourOFour += 1
 								print line
 								print url_checked
-								with open('app/templates/deadlinks.html','a') as out:
+								with open('app/templates/logs.html','a') as out:
 									out.write ('{}{}\n{}{}{}\n'.format(' - FAILED','<br/>','404 - ',url_checked,'<br/>'))
 
 								dead_link_found = True
 
 					print "Number of Dead Links: %d" %FourOFour
-					with open('app/templates/deadlinks.html','a') as out:
+					with open('app/templates/logs.html','a') as out:
 						if (FourOFour == 0 ):
 							out.write ('{}{}\n'.format(' - GOOD', '<br/>'))
 
 
-			with open('app/templates/deadlinks.html','a') as out:
+			with open('app/templates/logs.html','a') as out:
 				out.write ('{}\n{}\n{}\n{}\n'.format('--  All Sites Checked --','</p>','</body>','</html>'))
 
 
@@ -71,7 +73,7 @@ class run_check(object):
 
 			if ( dead_link_found == True ):
 				with open('app/templates/check.xml','w') as out:
-					xml_out_3 = "<status>Dead Links Found</status>"
+					xml_out_3 = "<status>Dead links found check logs - " + check_log_url + "</status>"
 					xml_out_4 = "<response_time>%.2f</response_time>" % total_time
 					out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1,xml_out_2,xml_out_3,xml_out_4,xml_out_5))
 
