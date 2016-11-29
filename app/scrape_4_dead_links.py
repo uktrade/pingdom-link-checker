@@ -15,7 +15,7 @@ class run_check(object):
 
 	def run(self):
 		""" Method that runs forever """
-		check_log_url = "https://pingdom-link-checker.herokuapp.com/logs.html"
+		check_log_url = "https://pingdom-link-checker.ukti.io/logs.html"
 
 		while True:
 		
