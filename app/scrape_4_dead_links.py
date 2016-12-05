@@ -49,7 +49,7 @@ class run_check(object):
 							if '--20' in line:
 								url_checked = line
 
-							if '404' in line:
+							if "404 Not Found" in line:
 								FourOFour += 1
 								print line
 								print url_checked
