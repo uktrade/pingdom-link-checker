@@ -6,20 +6,18 @@ http://www.great.gov.uk/de/invest
 http://www.great.gov.uk/in/invest
 http://www.great.gov.uk/study
 http://www.great.gov.uk/visit
-#http://www.great.gov.uk/export    - NL
-#http://www.great.gov.uk/export/new   - NL
-#http://www.great.gov.uk/export/regular  - NL
+http://www.great.gov.uk/export
+http://www.great.gov.uk/export/new
+http://www.great.gov.uk/export/regular
 http://www.great.gov.uk/export/occasional
 http://export.great.gov.uk
-#http://www.great.gov.uk/export/opportunities  - NL
-#http://www.exportingisgreat.gov.uk/opportunities  - NL
-#http://www.great.gov.uk/trade  - NL
+http://www.great.gov.uk/trade
 http://www.great.gov.uk/export/find-a-buyer
 http://www.great.gov.uk/export/selling-online-overseas
-#Currently failing raised with Onkar
 http://sso.trade.great.gov.uk
 http://trade.great.gov.uk
 http://find-a-buyer.export.great.gov.uk
+#Currently failing raised with Konrad
 http://selling-online-overseas.export.great.gov.uk
 http://invest.great.gov.uk
 #Currently failing raised with Onkar
