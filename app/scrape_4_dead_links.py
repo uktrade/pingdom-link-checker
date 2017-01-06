@@ -33,8 +33,8 @@ class run_check(object):
 						out.write ('{}{}{}'.format(",\"", current_url, "\":\"OK\""))
 			out.write ('{}'.format("}"))
 		#Create a blank OK XML
-		with open('app/templates/check.xml','w') as out:
-			out.write('{}\n'.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?><pingdom_http_custom_check><status>OK</status><response_time>0</response_time></pingdom_http_custom_check>"))
+		#with open('app/templates/check.xml','w') as out:
+		#	out.write('{}\n'.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?><pingdom_http_custom_check><status>OK</status><response_time>0</response_time></pingdom_http_custom_check>"))
 
 
 	def run(self):
