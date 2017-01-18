@@ -130,10 +130,10 @@ class run_check(object):
 							print (value)
 
 							if ( value != 'OK') :
-								out.write('{}\n{}{}{}\n'.format("The following URL has dead link:","<",key[7:],">"))
+								out.write('{}\n{}{}{}\n'.format("The following URL has dead link:","<",key[7:].replace('/','-'), ">"))
 								for x in value:
 									out.write('{}\n'.format(x))
-								out.write('{}{}{}\n'.format("</",key[7:],">"))
+								out.write('{}{}{}\n'.format("</",key[7:].replace('/','-'), ">"))
 
 
 					out.write('{}\n'.format("</status>"))
