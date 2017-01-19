@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9372958f-d3d8-469c-ae8d-b1524db318e3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/scrape_4_dead_links.py" afterPath="$PROJECT_DIR$/app/scrape_4_dead_links.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/check.xml" afterPath="$PROJECT_DIR$/app/templates/check.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/logs.html" afterPath="$PROJECT_DIR$/app/templates/logs.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/url_list" afterPath="$PROJECT_DIR$/url_list" />
@@ -38,8 +37,8 @@
       <file leaf-file-name="url_list" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/url_list">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+            <state relative-caret-position="60">
+              <caret line="4" column="26" lean-forward="true" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -48,14 +47,24 @@
       <file leaf-file-name="url_list.full" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/url_list.full">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="195">
+              <caret line="13" column="26" lean-forward="false" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scrape_4_dead_links.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="check.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/templates/check.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scrape_4_dead_links.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/scrape_4_dead_links.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="390">
@@ -83,15 +92,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/url_list" />
         <option value="$PROJECT_DIR$/app/scrape_4_dead_links.py" />
         <option value="$PROJECT_DIR$/app/templates/check.xml" />
+        <option value="$PROJECT_DIR$/url_list" />
+        <option value="$PROJECT_DIR$/url_list.full" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="12" />
-    <option name="y" value="57" />
+    <option name="x" value="22" />
+    <option name="y" value="33" />
     <option name="width" value="1240" />
     <option name="height" value="1076" />
   </component>
@@ -379,7 +389,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="12" y="57" width="1240" height="1076" extended-state="0" />
+    <frame x="22" y="33" width="1240" height="1076" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23467742" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -507,14 +517,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="691">
-          <caret line="517" column="53" lean-forward="false" selection-start-line="517" selection-start-column="53" selection-end-line="517" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/refresh.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -530,26 +532,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/check.xml">
+    <entry file="file:///System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/url_list.full">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/url_list">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+        <state relative-caret-position="691">
+          <caret line="517" column="53" lean-forward="false" selection-start-line="517" selection-start-column="53" selection-end-line="517" selection-end-column="53" />
           <folding />
         </state>
       </provider>
@@ -558,6 +544,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
           <caret line="123" column="75" lean-forward="false" selection-start-line="123" selection-start-column="75" selection-end-line="123" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/url_list">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="26" lean-forward="true" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/url_list.full">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="26" lean-forward="false" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/check.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="0" lean-forward="true" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
