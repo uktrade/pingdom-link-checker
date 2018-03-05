@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pingdom_http_custom_check>
-<status>OK</status>
-<response_time>261440.25</response_time>
+<status>
+The following URL has dead link:
+<www.deadlinkcity.com>
+--2018-03-05 14:09:11--  http://www.deadlinkcity.com/missing-head-link-href.txt
+--2018-03-05 14:09:11--  http://www.deadlinkcity.com/images/nosuchimage.png?r=1
+--2018-03-05 14:09:11--  http://www.deadlinkcity.com/images/missing-body-background.jpg
+--2018-03-05 14:09:14--  http://www.deadlinkcity.com/error-page.asp?e=404
+--2018-03-05 14:09:31--  http://www.deadlinkcity.com/nosuchpage2.txt
+--2018-03-05 14:09:31--  http://www.deadlinkcity.com/nonexistentpage.txt
+--2018-03-05 14:09:32--  http://www.deadlinkcity.com/nosuchpage3.txt
+--2018-03-05 14:09:33--  http://www.deadlinkcity.com/nonexistentpage2.txt
+--2018-03-05 14:09:33--  http://www.deadlinkcity.com/disallowed/disallowed.html
+--2018-03-05 14:09:33--  http://www.deadlinkcity.com/disallowed/nonexistent.html
+--2018-03-05 14:09:33--  http://www.deadlinkcity.com/images/nosuchimage.png?r=0
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-area-test.asp
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-audio-src.mp3
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-sound.mp3
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-embed-src.swf
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-frame-src.html
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-iframe-src.html
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/images/missing-img-src.jpg
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/images/missing-input-src.jpg
+--2018-03-05 14:09:34--  http://www.deadlinkcity.com/missing-object-data.swf
+--2018-03-05 14:09:35--  http://www.deadlinkcity.com/missing-script-src.js
+--2018-03-05 14:09:35--  http://www.deadlinkcity.com/missing-video-src.mp4
+--2018-03-05 14:09:35--  http://www.deadlinkcity.com/images/missing-video-poster.jpg
+</www.deadlinkcity.com>
+</status>
+<response_time>26432.46</response_time>
 </pingdom_http_custom_check>
