@@ -1,20 +1,20 @@
 { "urls" : 
  [
-  "http://www.great.gov.uk/int/invest",
-  "http://www.great.gov.uk/us/invest",
-  "http://www.great.gov.uk/cn/invest",
-  "http://www.great.gov.uk/de/invest",
-  "http://www.great.gov.uk/in/invest",
-  "http://www.great.gov.uk/study",
-  "http://www.great.gov.uk/visit",
-  "http://www.great.gov.uk/export",
-  "http://www.great.gov.uk/new",
-  "http://www.great.gov.uk/regular",
-  "http://www.great.gov.uk/occasional",
-  "http://www.great.gov.uk/export/find-a-buyer",
-  "http://sso.trade.great.gov.uk",
-  "http://find-a-buyer.export.great.gov.uk",
-  "http://selling-online-overseas.export.great.gov.uk",
-  "http://invest.great.gov.uk"
+  "https://www.great.gov.uk/int/invest",
+  "https://www.great.gov.uk/us/invest",
+  "https://www.great.gov.uk/cn/invest",
+  "https://www.great.gov.uk/de/invest",
+  "https://www.great.gov.uk/in/invest",
+  "https://www.great.gov.uk/study",
+  "https://www.great.gov.uk/visit",
+  "https://www.great.gov.uk/export",
+  "https://www.great.gov.uk/new",
+  "https://www.great.gov.uk/regular",
+  "https://www.great.gov.uk/occasional",
+  "https://www.great.gov.uk/export/find-a-buyer",
+  "https://sso.trade.great.gov.uk",
+  "https://find-a-buyer.export.great.gov.uk",
+  "https://selling-online-overseas.export.great.gov.uk",
+  "https://invest.great.gov.uk"
  ]
 }
