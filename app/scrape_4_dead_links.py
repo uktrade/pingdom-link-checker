@@ -99,10 +99,10 @@ class run_check(object):
                         print(key)
                         print(value)
                         if value != 'OK':
-                            out.write('{}\n{}{}{}\n'.format("The following URL has dead link:", "<", key[7:].replace('/', '-'), ">"))
+                            out.write('{}\n{}{}{}\n'.format("The following URL has dead link:", "<", key[8:].replace('/', '_'), ">"))
                             for x in value:
                                 out.write('{}\n'.format(x))
-                            out.write('{}{}{}\n'.format("</", key[7:].replace('/', '-'), ">"))
+                            out.write('{}{}{}\n'.format("</", key[8:].replace('/', '_'), ">"))
                     out.write('{}\n'.format("</status>"))
                     xml_out_4 = "<response_time>%.2f</response_time>" % total_time
                     out.write('{}\n{}\n'.format(xml_out_4, xml_out_5))
