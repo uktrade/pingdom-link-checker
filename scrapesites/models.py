@@ -1,31 +1,22 @@
+from django.db import models
+
 import threading
 import subprocess
 import os
 import time
 import json
 
+# Create your models here.
+class run_check(models.Model):
 
-class run_check(object):
 
-    def __init__(self):
-            # Create an initial OK XML so an alert is not raised on start-up.
-            with open('app/templates/check.xml', 'w') as out:
-                xml_out_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                xml_out_2 = "<pingdom_http_custom_check>"
-                xml_out_3 = "<status>OK</status>"
-                xml_out_4 = "<response_time>0.00</response_time>"
-                xml_out_5 = "</pingdom_http_custom_check>"
-                out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
-            # Set how long to sleep before re-running check.
-            self.interval = int(os.environ.get('CHECK_INTERVAL'))
-            print('This check will run every ' + str(self.interval) + 's')
-            thread = threading.Thread(target=self.run, args=())
-            thread.daemon = True
-            thread.start()
+    # Method that runs forever.
+    # Open file that contains the URLs to check.
+    while True:
+        print ('I am running check')
+        time.sleep(10)
 
-    def run(self):
-        # Method that runs forever.
-        # Open file that contains the URLs to check.
+'''
         with open('url_list.json') as json_file:
                 all_urls = json.load(json_file)
         # Initialize a url list with all green OK status.
@@ -112,3 +103,25 @@ class run_check(object):
                     xml_out_4 = "<response_time>%.2f</response_time>" % total_time
                     out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))                                                                                                               # Sleep for duration of check interval.
             time.sleep(self.interval)
+'''
+
+def publish(self):
+        # Create an initial OK XML so an alert is not raised on start-up.
+        print('This check will run every ')
+        self.save()
+'''
+        with open('app/templates/check.xml', 'w') as out:
+            xml_out_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            xml_out_2 = "<pingdom_http_custom_check>"
+            xml_out_3 = "<status>OK</status>"
+            xml_out_4 = "<response_time>0.00</response_time>"
+            xml_out_5 = "</pingdom_http_custom_check>"
+            out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
+            # Set how long to sleep before re-running check.
+        self.interval = int(os.environ.get('CHECK_INTERVAL'))
+        print('This check will run every ' + str(self.interval) + 's')
+        self.save()
+            #thread = threading.Thread(target=self.run, args=())
+            #thread.daemon = True
+            #thread.start()
+'''
