@@ -1,0 +1,9 @@
+ERROR Crawled 16 urls with 1 error(s) in 5.10 seconds
+
+  Start URL(s): https://www.createdbypete.com
+
+  not found (404): https://www.createdbypete.com/articles/make-a-local-website-mirror-with-wget/
+    from https://www.createdbypete.com/articles/simple-way-to-find-broken-links-with-wget/
+      <a href="/articles/make-a-local-website-mirror-with-wget/">mirror and...
+    from https://www.createdbypete.com/articles/simple-way-to-find-broken-links-with-wget/
+      <a href="/articles/make-a-local-website-mirror-with-wget/">mirror and...

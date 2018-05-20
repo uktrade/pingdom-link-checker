@@ -1,2 +1,6 @@
+beautifulsoup4==4.6.0
 Django==2.0.5
 psycopg2==2.7.4
+psycopg2-binary==2.7.4
+pylinkvalidator==0.3
+pytz==2018.4
