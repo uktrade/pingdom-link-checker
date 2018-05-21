@@ -27,7 +27,7 @@ class run_check(models.Model):
     while True:
         print ('I am running check')
         # Pingdom checks for XML in a set format.
-        '''
+        
         xml_out_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
         xml_out_2 = "<pingdom_http_custom_check>"
         xml_out_3 = ""
@@ -36,10 +36,10 @@ class run_check(models.Model):
         t0 = time.time()
 
         # Create logs.html for storing link check results.
-        with open('app/templates/logs.html', 'w') as out:
-            out.write('{}\n{}\n{}\n{}\n'.format('<html>', '<body>', '<h1>Link check - logs</h1>', '<p>'))
-        '''
-        #import pdb; pdb.set_trace()
+        # with open('app/templates/logs.html', 'w') as out:
+        #    out.write('{}\n{}\n{}\n{}\n'.format('<html>', '<body>', '<h1>Link check - logs</h1>', '<p>'))
+        
+        # import pdb; pdb.set_trace()
         # For all URLs check for 404 dead links.
         for current_url, status in my_list.items():
             count_404 = 0
@@ -49,8 +49,7 @@ class run_check(models.Model):
             '''
             with open('app/templates/logs.html', 'a') as out:
                 out.write('{}'.format(current_url))
-            # Use wgets spider to check all links -t (3s) time to wait if link doesnt respond,
-            # remove check for robots.txt, -r recurse website & output results to a list.
+
             '''
             #output_results = subprocess.run(['wget', '--spider', '-t', '3', '-e', 'robots=off', '-r', '-p', current_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             #output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
@@ -61,14 +60,16 @@ class run_check(models.Model):
             #print (lines)
             for item in lines:
                 current_item_pos += 1
+                #import pdb; pdb.set_trace()
                 if item.lstrip(' ').startswith('not found (404)'):
                     #import pdb; pdb.set_trace()
                     count_404 += 1
-                    for x in range (current_item_pos,len(lines)):
+                    dead_link_found = True
+                    for x in range (current_item_pos,current_item_pos+2):
                         if (lines[x]).lstrip(' ').startswith ('from'):
                             print('Source URL: ' + lines[x].lstrip(' ').rstrip("\n"))
                             source_url = lines[x].lstrip(' ').rstrip("\n")
-                        if (lines[x]).lstrip(' ').startswith ('<a href'):
+                        if (lines[x]).lstrip(' ').startswith ('<'):
                             print('Broken Link: ' + lines[x].lstrip(' ').rstrip("\n"))
                             broken_url = lines[x].lstrip(' ').rstrip("\n")
                             statement = "INSERT INTO url_status VALUES ('" + current_url + "', '" + source_url + "', '" + broken_url + "') ON CONFLICT (site, source_url, broken_url) DO NOTHING"
@@ -118,13 +119,30 @@ class run_check(models.Model):
             out.write('{}\n{}\n{}\n{}\n'.format('--  All Sites Checked --', '</p>', '</body>', '</html>'))
         # Record time it took to run checks so that it can be displayed in
         # pingdoms response time.
+        '''
         t1 = time.time()
         total_time = (t1 - t0) * 1000
+        #import pdb; pdb.set_trace()
         # Ouput urls link status to pingdoms check XML,
         # this is what pingdom points to.
         if dead_link_found:
-            with open('app/templates/check.xml', 'w') as out:
+            with open('scrapesites/templates/check.xml', 'w') as out:
                 out.write('{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, "<status>"))
+                result = "TABLE url_status"
+                mark = connection.cursor()
+                mark.execute(result)
+                #out.write('{}\n{}{}{}\n'.format("The following URL has dead link:", "<", key[8:].replace('/', '_'), ">"))
+                #import pdb; pdb.set_trace()
+                while True:
+                    row = mark.fetchone()
+
+                    if row == None:
+                        break
+                    
+                    out.write('{}{}{}\n'.format(row[0], row[1], row[2].replace('<', '-').replace('>', '-')))
+                    print("site: " + row[0] + "\t\tSource url: " + row[1] + "\t\tBroken url: " + row[2])
+                #out.write('{}{}{}\n'.format("</", key[8:].replace('/', '_'), ">"))
+                '''
                 for key, value in my_list.items():
                     print(key)
                     print(value)
@@ -133,15 +151,16 @@ class run_check(models.Model):
                         for x in value:
                             out.write('{}\n'.format(x))
                         out.write('{}{}{}\n'.format("</", key[8:].replace('/', '_'), ">"))
+                '''
                 out.write('{}\n'.format("</status>"))
                 xml_out_4 = "<response_time>%.2f</response_time>" % total_time
                 out.write('{}\n{}\n'.format(xml_out_4, xml_out_5))
         if not dead_link_found:
-            with open('app/templates/check.xml', 'w') as out:
+            with open('scrapesites/templates/check.xml', 'w') as out:
                 xml_out_3 = "<status>OK</status>"
                 xml_out_4 = "<response_time>%.2f</response_time>" % total_time
                 out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))                                                                                                               # Sleep for duration of check interval.
-        '''
+
         time.sleep(interval)
 
 
