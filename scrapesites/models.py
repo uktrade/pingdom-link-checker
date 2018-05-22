@@ -1,4 +1,17 @@
 from django.db import models
+
+# Create your models here.
+
+class Url_status(models.Model):
+    site = models.TextField(primary_key=True)
+    source_url = models.TextField()
+    broken_url = models.TextField()
+    class Meta:
+        db_table = 'url_status'
+        unique_together = ('site', 'source_url', 'broken_url')
+
+
+'''
 from pylinkvalidator.api import crawl_with_options
 
 import psycopg2
@@ -8,7 +21,7 @@ import os
 import time
 import json
 
-# Create your models here.
+
 class run_check(models.Model):
 
     xml_out_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -82,7 +95,6 @@ class run_check(models.Model):
             with open('scrapesites/templates/logs.html', 'a') as out:
                 out.write('{}{}'.format('<br>', current_url))
 
-            #output_results = subprocess.run(['wget', '--spider', '-t', '3', '-e', 'robots=off', '-r', '-p', current_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             #output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
             output_results = subprocess.run(['pylinkvalidate.py', '--depth=4', '--show-source', '--output=url.out', current_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             f = open('url.out', 'r')
@@ -164,8 +176,4 @@ class run_check(models.Model):
 
         time.sleep(interval)
 
-
-def publish(self):
-        # Create an initial OK XML so an alert is not raised on start-up.
-        print('This check will run every ')
-        self.save()
+'''
