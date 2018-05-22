@@ -4,4 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 def url_search_results(request):
-    return render(request, 'index.html', {})
+    return render(request, 'check.xml', {})
+
+def logs(request):
+    return render(request, 'logs.html', {})
