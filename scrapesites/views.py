@@ -7,4 +7,4 @@ def url_search_results(request):
     return render(request, 'check.xml', {})
 
 def logs(request):
-    return render(request, 'logs.html', {})
+    return render(request, 'index.html', {})

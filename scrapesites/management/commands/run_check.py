@@ -1,25 +1,23 @@
 from django.core.management.base import BaseCommand, CommandError
 from pylinkvalidator.api import crawl_with_options
+from scrapesites.send_to_slack import send_message
 
-import psycopg2
+#import psycopg2
 import subprocess
 import os
 import time
 import json
 
-from scrapesites.models import Urllist, Url_status
+from scrapesites.models import Urllist, Url_status, Responsetime
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        connection = psycopg2.connect("dbname='url_results' user='checker' host='localhost' password='checker'")
+        #connection = psycopg2.connect("dbname='url_results' user='checker' host='localhost' password='checker'")
 
         xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
-        on_start_get_status(connection)
+        # On start also clear table for ol urls that no longr exists
+        on_start_get_status()
         # import pdb; pdb.set_trace()
-        # Open file that contains the URLs to check.
-        # with open('url_list.json') as json_file:
-        #        all_urls = json.load(json_file)
-
         # interval = int(os.environ.get('CHECK_INTERVAL'))
 
         print('I am running check')
@@ -30,19 +28,6 @@ class Command(BaseCommand):
         # Create logs.html for storing link check results.
         with open('scrapesites/templates/logs.html', 'w') as out:
             out.write('{}\n{}\n{}\n{}\n'.format('<html>', '<body>', '<h1>Link check - logs</h1>', '<p>'))
-
-        # import pdb; pdb.set_trace()
-        # For all URLs check for 404 dead links.
-
-        # url = Url_status()
-        # url.site = "www.whatevers.com"
-        # ...
-        # url.save()
-
-        # obj, created = Url_status.objects.get_or_create(site=, x,y)
-
-        # if created:
-        # we have a new o bject
 
         for url_list in Urllist.objects.filter(enable=True):
             print(url_list.url, " ", url_list.team)
@@ -64,9 +49,10 @@ class Command(BaseCommand):
                 current_item_pos += 1
                 # import pdb; pdb.set_trace()
                 if item.lstrip(' ').startswith('not found (404)'):
-                    # import pdb; pdb.set_trace()
+                    #import pdb; pdb.set_trace()
                     count_404 += 1
                     dead_link_found = True
+                    Urllist.objects.filter(url=url_list.url).update(bad_link=True)
                     if count_404 < 2:
                         with open('scrapesites/templates/logs.html', 'a') as out:
                             out.write('{}{}\n'.format(' - FAILED', '</br>'))
@@ -78,12 +64,6 @@ class Command(BaseCommand):
                         if (lines[x]).lstrip(' ').startswith('<'):
                             print('Broken Link: ' + lines[x].lstrip(' ').rstrip("\n"))
                             broken_url = lines[x].lstrip(' ').rstrip("\n")
-
-                            # statement = "INSERT INTO url_status VALUES ('" + current_url + "', '" + source_url + "', '" + broken_url + "') ON CONFLICT (site, source_url, broken_url) DO NOTHING"
-                            # mark = connection.cursor()
-                            # mark.execute(statement)
-                            # connection.commit()
-                            # import pdb; pdb.set_trace()
                             try:
                                 Url_status.objects.get_or_create(
                                     site=url_list.url,
@@ -100,11 +80,8 @@ class Command(BaseCommand):
                 # import pdb; pdb.set_trace()
 
                 Url_status.objects.filter(site=url_list.url).delete()
-                # statement = "DELETE FROM url_status WHERE site = '" + url_list.url + "'"
-                # mark = connection.cursor()
-                # mark.execute(statement)
-                # connection.commit()
-
+                Urllist.objects.filter(url=url_list.url).update(bad_link=False, slack_sent=False)
+                # maybe send all clear slack.
                 with open('scrapesites/templates/logs.html', 'a') as out:
                     out.write('{}{}\n'.format(' - GOOD', '</br>'))
 
@@ -116,48 +93,67 @@ class Command(BaseCommand):
 
         t1 = time.time()
         total_time = (t1 - t0) * 1000
+        # Responsetime.objects.filter(id=1).update(response_time=total_time)
+        defaults = {'response_time': total_time}
+        Responsetime.objects.update_or_create(id=1, defaults=defaults)
         # import pdb; pdb.set_trace()
         # Ouput urls link status to pingdoms check XML,
         # this is what pingdom points to.
         if dead_link_found:
-            load_broken_links_from_db(connection, xml_out_1, xml_out_2, xml_out_5)
+            load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, total_time)
         else:
             with open('scrapesites/templates/check.xml', 'w') as out:
                 xml_out_3 = "<status>OK</status>"
                 xml_out_4 = "<response_time>%.2f</response_time>" % total_time
                 out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
 
+        # Send slack
+        for urllist in Urllist.objects.filter(bad_link=True,slack_sent=False):
+            # import pdb; pdb.set_trace()
+            if send_message(urllist.team):
+                Urllist.objects.filter(url=urllist.url).update(slack_sent=True)
+            else:
+                print("Could not send slack message")
 
-def on_start_get_status(connection):
+
+def on_start_get_status():
     # Check if url check table is empty
     xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
-    # query = "SELECT CASE WHEN EXISTS (SELECT * FROM url_status LIMIT 1) THEN 1 ELSE 0 END"
-    # check_empty = connection.cursor()
-    # check_empty.execute(query)
     # import pdb; pdb.set_trace()
-    # if check_empty.fetchone() == 0:
     if not Url_status.objects.exists():
+        if not Responsetime.objects.exists():
+            xml_out_4 = "<response_time>0.00</response_time>"
+        else:
+            xml_out_4 = "<response_time>%.2f</response_time>" % Responsetime.objects.get(id=1).response_time
         with open('scrapesites/templates/check.xml', 'w') as out:
             xml_out_3 = "<status>OK</status>"
-            xml_out_4 = "<response_time>0.00</response_time>"
             out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
     else:
-        load_broken_links_from_db(connection, xml_out_1, xml_out_2, xml_out_5)
+        response_time = Responsetime.objects.get(id=1).response_time
+        load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time)
 
 
-def load_broken_links_from_db(connection, xml_out_1, xml_out_2, xml_out_5):
+def load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time):
     with open('scrapesites/templates/check.xml', 'w') as out:
-            out.write('{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, "<status>"))
-            for row in Url_status.objects.all().values():
-                # import pdb; pdb.set_trace()
-                out.write('{}{}{}\n'.format('Website: ', row['site'], '<br/>'))
-                out.write('{}{}{}'.format('Source Page: ', row['source_url'], '<br/>'))
-                out.write('{}{}{}\n'.format('Bad Link: ', row['broken_url'].replace('<', '&lt;').replace('>', '&gt;'), '<br/>'))
-                print(row)
+        out.write('{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, "<status>"))
+        website_list = []
+        count = 0
+        for row in Url_status.objects.all().values():
+            # import pdb; pdb.set_trace()
 
-            out.write('{}\n'.format("</status>"))
-            xml_out_4 = "<response_time>0.0</response_time>"
-            out.write('{}\n{}\n'.format(xml_out_4, xml_out_5))
+            website_list.append(row['site'])
+            if count == 0:
+                out.write('{}{}{}\n'.format('<b><u>Website: ', row['site'], '</u></b><br/>'))
+            elif website_list[count - 1] != row['site']:
+                out.write('{}{}{}{}\n'.format('</br>', '<b><u>Website: ', row['site'], '</u></b><br/>'))
+            count += 1
+            out.write('{}{}{}\n'.format('Source Page: <font color="#000099">', row['source_url'], '</font><br/>'))
+            out.write('{}{}{}\n\n'.format('Bad Link: <font color="#990000">', row['broken_url'].replace('<', '&lt;').replace('>', '&gt;'), '</font><br/><br/>'))
+            print(row)
+
+        out.write('{}{}\n'.format('</status>','<br/>'))
+        xml_out_4 = "<response_time>%.2f</response_time>" % response_time
+        out.write('{}\n{}\n'.format(xml_out_4, xml_out_5))
 
 
 def initialize_check_xml_format():

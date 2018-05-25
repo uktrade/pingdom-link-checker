@@ -11,6 +11,11 @@ class Url_status(models.Model):
         unique_together = ('site', 'source_url', 'broken_url')
 
 class Urllist(models.Model):
-	url = models.URLField()
-	team = models.CharField(max_length=60)
-	enable = models.BooleanField(default=True)
+    url = models.URLField()
+    team = models.CharField(max_length=60)
+    enable = models.BooleanField(default=True)
+    bad_link = models.BooleanField(default=False)
+    slack_sent = models.BooleanField(default=False)
+
+class Responsetime(models.Model):
+    response_time = models.FloatField()
