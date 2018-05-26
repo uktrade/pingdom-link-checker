@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from pylinkvalidator.api import crawl_with_options
 from scrapesites.send_to_slack import send_message
 
-#import psycopg2
 import subprocess
 import os
 import time
@@ -12,14 +11,10 @@ from scrapesites.models import Urllist, Url_status, Responsetime
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        #connection = psycopg2.connect("dbname='url_results' user='checker' host='localhost' password='checker'")
-
         xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
-        # On start also clear table for ol urls that no longr exists
         on_start_clear_db()
         on_start_get_status()
         # import pdb; pdb.set_trace()
-        # interval = int(os.environ.get('CHECK_INTERVAL'))
 
         print('I am running check')
 
@@ -39,12 +34,28 @@ class Command(BaseCommand):
 
             with open('scrapesites/templates/logs.html', 'a') as out:
                 out.write('{}{}'.format('<br>', url_list.url))
-            # import pdb; pdb.set_trace()
+            #import pdb; pdb.set_trace()
             # output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
-            subprocess.run(['pylinkvalidate.py', '--depth=4', '--show-source', '--output=url.out', url_list.url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            f = open('url.out', 'r')
-            lines = f.readlines()
-            f.close()
+            ignore_prefix = '--ignore=' + (os.environ.get('IGNORE_PREFIXES'))
+            process_out = subprocess.run(['pylinkvalidate.py', \
+                        '--depth=4', \
+                        '--workers=10', \
+                        '--show-source', \
+                        '--console', \
+                        #'--types=a', \
+                        '--test-outside', \
+                        '--parser=lxml', \
+                        '--header=\'Connection: keep-alive\'', \
+                        '--header=\'Pragma: no-cache\'', \
+                        '--header=\'Cache-Control: no-cache\'', \
+                        '--header=\'Upgrade-Insecure-Requests: 1\'', \
+                        '--header=\'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\'', \
+                        '--header=\'DNT: 1\'', \
+                        '--header=\'Accept-Encoding: gzip, deflate\'', \
+                        '--header=\'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36\'', \
+                        ignore_prefix, \
+                        url_list.url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            lines = process_out.stdout.decode('utf-8').split('\n')
             # print (lines)
             for item in lines:
                 current_item_pos += 1
@@ -130,7 +141,7 @@ def on_start_get_status():
     xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
     response_time = Responsetime.objects.get(id=1).response_time
     # import pdb; pdb.set_trace()
-    if Responsetime.objects.get(id=1).previous_check_state:
+    if Responsetime.objects.get(id=1).previous_check_state or not Url_status.objects.exists():
         xml_out_3 = "<status>OK</status>"
         xml_out_4 = "<response_time>%.2f</response_time>" % response_time
         with open('scrapesites/templates/check.xml', 'w') as out:
