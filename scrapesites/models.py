@@ -2,19 +2,18 @@ from django.db import models
 
 # Create your models here.
 
-class Url_status(models.Model):
-    site = models.TextField(primary_key=True)
+class Brokenlink(models.Model):
+    site_url = models.TextField()
     source_url = models.TextField()
-    broken_url = models.TextField()
+    broken_link = models.TextField()
     class Meta:
-        db_table = 'url_status'
-        unique_together = ('site', 'source_url', 'broken_url')
+        unique_together = ('site_url', 'source_url', 'broken_link')
 
 class Urllist(models.Model):
-    url = models.URLField()
+    site_url = models.URLField()
     team = models.CharField(max_length=60)
     enable = models.BooleanField(default=True)
-    bad_link = models.BooleanField(default=False)
+    broken_link_found = models.BooleanField(default=False)
     slack_sent = models.BooleanField(default=False)
 
 class Responsetime(models.Model):

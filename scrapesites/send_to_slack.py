@@ -4,10 +4,7 @@ from urllib import request
 
 def send_message(team):
     # Read team from shell
-    #try:
     team_slack_url = (os.environ.get(team))
-    #except:
-    #    print("Env var for " + team + " doesn't exist")
     # import pdb; pdb.set_trace()
     if team_slack_url:
         print(team + ': Broken links have been found on your site please investigate')

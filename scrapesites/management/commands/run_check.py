@@ -5,9 +5,9 @@ from scrapesites.send_to_slack import send_message
 import subprocess
 import os
 import time
-import json
 
-from scrapesites.models import Urllist, Url_status, Responsetime
+
+from scrapesites.models import Brokenlink, Urllist, Responsetime
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -25,19 +25,19 @@ class Command(BaseCommand):
         with open('scrapesites/templates/logs.html', 'w') as out:
             out.write('{}\n{}\n{}\n{}\n'.format('<html>', '<body>', '<h1>Link check - logs</h1>', '<p>'))
 
-        for url_list in Urllist.objects.filter(enable=True):
-            print(url_list.url, " ", url_list.team)
+        for current_url in Urllist.objects.filter(enable=True):
+            print(current_url.site_url, " ", current_url.team)
             # import pdb; pdb.set_trace()
             count_404 = 0
             current_item_pos = 0
             # Update log file with url name.
 
             with open('scrapesites/templates/logs.html', 'a') as out:
-                out.write('{}{}'.format('<br>', url_list.url))
+                out.write('{}{}'.format('<br>', current_url.site_url))
             #import pdb; pdb.set_trace()
             # output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
             ignore_prefix = '--ignore=' + (os.environ.get('IGNORE_PREFIXES'))
-            process_out = subprocess.run(['pylinkvalidate.py', \
+            scan_results = subprocess.run(['pylinkvalidate.py', \
                         '--depth=4', \
                         '--workers=10', \
                         '--show-source', \
@@ -54,45 +54,45 @@ class Command(BaseCommand):
                         '--header=\'Accept-Encoding: gzip, deflate\'', \
                         '--header=\'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36\'', \
                         ignore_prefix, \
-                        url_list.url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            lines = process_out.stdout.decode('utf-8').split('\n')
-            # print (lines)
-            for item in lines:
+                        current_url.site_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            scan_result_list = scan_results.stdout.decode('utf-8').split('\n')
+            # print (scan_result_list)
+            for item in scan_result_list:
                 current_item_pos += 1
                 # import pdb; pdb.set_trace()
                 if item.lstrip(' ').startswith('not found (404)'):
                     #import pdb; pdb.set_trace()
                     count_404 += 1
                     dead_link_found = True
-                    Urllist.objects.filter(url=url_list.url).update(bad_link=True)
+                    Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=True)
                     if count_404 < 2:
                         with open('scrapesites/templates/logs.html', 'a') as out:
                             out.write('{}{}\n'.format(' - FAILED', '</br>'))
 
                     for x in range(current_item_pos, current_item_pos + 2):
-                        if (lines[x]).lstrip(' ').startswith('from'):
-                            print('Source URL: ' + lines[x].lstrip(' ').rstrip("\n"))
-                            source_url = lines[x].lstrip(' ').rstrip("\n")
-                        if (lines[x]).lstrip(' ').startswith('<'):
-                            print('Broken Link: ' + lines[x].lstrip(' ').rstrip("\n"))
-                            broken_url = lines[x].lstrip(' ').rstrip("\n")
+                        if (scan_result_list[x]).lstrip(' ').startswith('from'):
+                            print('Source URL: ' + scan_result_list[x].lstrip(' ').rstrip("\n"))
+                            source_url = scan_result_list[x].lstrip(' ').rstrip("\n")
+                        if (scan_result_list[x]).lstrip(' ').startswith('<'):
+                            print('Broken Link: ' + scan_result_list[x].lstrip(' ').rstrip("\n"))
+                            broken_link = scan_result_list[x].lstrip(' ').rstrip("\n")
                             try:
-                                Url_status.objects.get_or_create(
-                                    site=url_list.url,
+                                Brokenlink.objects.get_or_create(
+                                    site_url=current_url.site_url,
                                     source_url=source_url,
-                                    broken_url=broken_url,)
+                                    broken_link=broken_link,)
                             except:
                                 print("entry exists")
                             with open('scrapesites/templates/logs.html', 'a') as out:
                                 out.write('{}{}{}\n'.format('<br>404 Source: ', source_url, '<br/>'))
-                                out.write('{}{}{}\n'.format('<br>Broken link: ', broken_url, '</br>'))
+                                out.write('{}{}{}\n'.format('<br>Broken link: ', broken_link, '</br>'))
 
             # Clear table if no more 404's found.
             if count_404 == 0:
                 # import pdb; pdb.set_trace()
 
-                Url_status.objects.filter(site=url_list.url).delete()
-                Urllist.objects.filter(url=url_list.url).update(bad_link=False, slack_sent=False)
+                Brokenlink.objects.filter(site_url=current_url.site_url).delete()
+                Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=False, slack_sent=False)
                 # maybe send all clear slack.
                 with open('scrapesites/templates/logs.html', 'a') as out:
                     out.write('{}{}\n'.format(' - GOOD', '</br>'))
@@ -123,25 +123,25 @@ class Command(BaseCommand):
                 out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
 
         # Send slack
-        for urllist in Urllist.objects.filter(bad_link=True,slack_sent=False):
+        for urllist in Urllist.objects.filter(broken_link_found=True,slack_sent=False):
             # import pdb; pdb.set_trace()
             if send_message(urllist.team):
-                Urllist.objects.filter(url=urllist.url).update(slack_sent=True)
+                Urllist.objects.filter(url=urllist.site_url).update(slack_sent=True)
             else:
                 print("Could not send slack message")
 
 def on_start_clear_db():
     # import pdb; pdb.set_trace()
-    for row in Url_status.objects.all().values():
-        if row['site'] not in Urllist.objects.values_list('url', flat=True):
-            Url_status.objects.filter(site=row['site']).delete()
+    for current_row in Brokenlink.objects.all().values():
+        if current_row['site_url'] not in Urllist.objects.values_list('site_url', flat=True):
+            Brokenlink.objects.filter(site=current_row['site_url']).delete()
 
 def on_start_get_status():
     # Check if url check table is empty
     xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
     response_time = Responsetime.objects.get(id=1).response_time
     # import pdb; pdb.set_trace()
-    if Responsetime.objects.get(id=1).previous_check_state or not Url_status.objects.exists():
+    if Responsetime.objects.get(id=1).previous_check_state or not Brokenlink.objects.exists():
         xml_out_3 = "<status>OK</status>"
         xml_out_4 = "<response_time>%.2f</response_time>" % response_time
         with open('scrapesites/templates/check.xml', 'w') as out:
@@ -154,18 +154,18 @@ def load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time):
         out.write('{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, "<status>"))
         website_list = []
         count = 0
-        for row in Url_status.objects.all().values():
+        for current_row in Brokenlink.objects.all().values():
             # import pdb; pdb.set_trace()
 
-            website_list.append(row['site'])
+            website_list.append(current_row['site_url'])
             if count == 0:
-                out.write('{}{}{}\n'.format('<b><u>Website: ', row['site'], '</u></b><br/>'))
-            elif website_list[count - 1] != row['site']:
-                out.write('{}{}{}{}\n'.format('</br>', '<b><u>Website: ', row['site'], '</u></b><br/>'))
+                out.write('{}{}{}\n'.format('<b><u>Website: ', current_row['site_url'], '</u></b><br/>'))
+            elif website_list[count - 1] != current_row['site_url']:
+                out.write('{}{}{}{}\n'.format('</br>', '<b><u>Website: ', current_row['site_url'], '</u></b><br/>'))
             count += 1
-            out.write('{}{}{}\n'.format('Source Page: <font color="#000099">', row['source_url'], '</font><br/>'))
-            out.write('{}{}{}\n\n'.format('Bad Link: <font color="#990000">', row['broken_url'].replace('<', '&lt;').replace('>', '&gt;'), '</font><br/><br/>'))
-            print(row)
+            out.write('{}{}{}\n'.format('Source Page: <font color="#000099">', current_row['source_url'], '</font><br/>'))
+            out.write('{}{}{}\n\n'.format('Bad Link: <font color="#990000">', current_row['broken_link'].replace('<', '&lt;').replace('>', '&gt;'), '</font><br/><br/>'))
+            print(current_row)
 
         out.write('{}{}\n'.format('</status>','<br/>'))
         xml_out_4 = "<response_time>%.2f</response_time>" % response_time
