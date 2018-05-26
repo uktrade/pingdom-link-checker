@@ -13,4 +13,4 @@ class url_list_admin(admin.ModelAdmin):
 
 @admin.register(Responsetime)
 class response_time_admin(admin.ModelAdmin):
-	list_display = ('id', 'response_time')
+	list_display = ('id', 'response_time', 'previous_check_state')

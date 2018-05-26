@@ -16,6 +16,7 @@ class Command(BaseCommand):
 
         xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
         # On start also clear table for ol urls that no longr exists
+        on_start_clear_db()
         on_start_get_status()
         # import pdb; pdb.set_trace()
         # interval = int(os.environ.get('CHECK_INTERVAL'))
@@ -94,14 +95,17 @@ class Command(BaseCommand):
         t1 = time.time()
         total_time = (t1 - t0) * 1000
         # Responsetime.objects.filter(id=1).update(response_time=total_time)
-        defaults = {'response_time': total_time}
-        Responsetime.objects.update_or_create(id=1, defaults=defaults)
+
         # import pdb; pdb.set_trace()
         # Ouput urls link status to pingdoms check XML,
         # this is what pingdom points to.
         if dead_link_found:
+            defaults = {'response_time': total_time, 'previous_check_state': False}
+            Responsetime.objects.update_or_create(id=1, defaults=defaults)
             load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, total_time)
         else:
+            defaults = {'response_time': total_time, 'previous_check_state': True}
+            Responsetime.objects.update_or_create(id=1, defaults=defaults)
             with open('scrapesites/templates/check.xml', 'w') as out:
                 xml_out_3 = "<status>OK</status>"
                 xml_out_4 = "<response_time>%.2f</response_time>" % total_time
@@ -115,23 +119,24 @@ class Command(BaseCommand):
             else:
                 print("Could not send slack message")
 
+def on_start_clear_db():
+    # import pdb; pdb.set_trace()
+    for row in Url_status.objects.all().values():
+        if row['site'] not in Urllist.objects.values_list('url', flat=True):
+            Url_status.objects.filter(site=row['site']).delete()
 
 def on_start_get_status():
     # Check if url check table is empty
     xml_out_1, xml_out_2, xml_out_5 = initialize_check_xml_format()
+    response_time = Responsetime.objects.get(id=1).response_time
     # import pdb; pdb.set_trace()
-    if not Url_status.objects.exists():
-        if not Responsetime.objects.exists():
-            xml_out_4 = "<response_time>0.00</response_time>"
-        else:
-            xml_out_4 = "<response_time>%.2f</response_time>" % Responsetime.objects.get(id=1).response_time
+    if Responsetime.objects.get(id=1).previous_check_state:
+        xml_out_3 = "<status>OK</status>"
+        xml_out_4 = "<response_time>%.2f</response_time>" % response_time
         with open('scrapesites/templates/check.xml', 'w') as out:
-            xml_out_3 = "<status>OK</status>"
             out.write('{}\n{}\n{}\n{}\n{}\n'.format(xml_out_1, xml_out_2, xml_out_3, xml_out_4, xml_out_5))
     else:
-        response_time = Responsetime.objects.get(id=1).response_time
         load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time)
-
 
 def load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time):
     with open('scrapesites/templates/check.xml', 'w') as out:

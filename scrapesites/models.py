@@ -18,4 +18,5 @@ class Urllist(models.Model):
     slack_sent = models.BooleanField(default=False)
 
 class Responsetime(models.Model):
-    response_time = models.FloatField()
+    response_time = models.FloatField(default=0.00)
+    previous_check_state = models.BooleanField(default=True)
