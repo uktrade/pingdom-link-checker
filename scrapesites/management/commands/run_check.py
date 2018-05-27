@@ -16,24 +16,26 @@ class Command(BaseCommand):
         on_start_get_status()
         # import pdb; pdb.set_trace()
 
-        print('I am running check')
+        print('Link check now running ...')
 
         dead_link_found = False
         t0 = time.time()
 
         # Create logs.html for storing link check results.
         with open('scrapesites/templates/logs.html', 'w') as out:
-            out.write('{}\n{}\n{}\n{}\n'.format('<html>', '<body>', '<h1>Link check - logs</h1>', '<p>'))
-
+            out.write('{}\n{}\n{}\n'.format('{% load staticfiles %}', '<html>', '<head>'))
+            out.write('{}\n'.format('<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">'))
+            out.write('{}\n'.format('<link rel="stylesheet" href="{% static "css/scrapesites.css" %}">'))
+            out.write('{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n'.format('<title>Link check - logs</title>', '</head>', '<body>', '<div class ="page-header">', '<h1>Link check - logs</h1>', '</div>', '<div class ="page-body">', '<p>'))
         for current_url in Urllist.objects.filter(enable=True):
-            print(current_url.site_url, " ", current_url.team)
+            print(current_url.site_url, " - Supported by: ", current_url.team)
             # import pdb; pdb.set_trace()
             count_404 = 0
             current_item_pos = 0
             # Update log file with url name.
 
             with open('scrapesites/templates/logs.html', 'a') as out:
-                out.write('{}{}'.format('<br>', current_url.site_url))
+                out.write('{}{}{}{}'.format('<h2>', current_url.site_url, " - Supported by: ", current_url.team))
             #import pdb; pdb.set_trace()
             # output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
             ignore_prefix = '--ignore=' + (os.environ.get('IGNORE_PREFIXES'))
@@ -67,7 +69,7 @@ class Command(BaseCommand):
                     Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=True)
                     if count_404 < 2:
                         with open('scrapesites/templates/logs.html', 'a') as out:
-                            out.write('{}{}\n'.format(' - FAILED', '</br>'))
+                            out.write('{}\n'.format(' - <span class="failed">FAILED</span></h2>'))
 
                     for x in range(current_item_pos, current_item_pos + 2):
                         if (scan_result_list[x]).lstrip(' ').startswith('from'):
@@ -84,8 +86,8 @@ class Command(BaseCommand):
                             except:
                                 print("entry exists")
                             with open('scrapesites/templates/logs.html', 'a') as out:
-                                out.write('{}{}{}\n'.format('<br>404 Source: ', source_url, '<br/>'))
-                                out.write('{}{}{}\n'.format('<br>Broken link: ', broken_link, '</br>'))
+                                out.write('{}{}{}\n'.format('<h3>404 Source: ', source_url, '</h3>'))
+                                out.write('{}{}{}\n'.format('<h4>Broken link: ', broken_link.replace('<', '&lt;').replace('>', '&gt;'), '</h4>'))
 
             # Clear table if no more 404's found.
             if count_404 == 0:
@@ -95,11 +97,11 @@ class Command(BaseCommand):
                 Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=False, slack_sent=False)
                 # maybe send all clear slack.
                 with open('scrapesites/templates/logs.html', 'a') as out:
-                    out.write('{}{}\n'.format(' - GOOD', '</br>'))
+                    out.write('{}\n'.format(' - <span class="good">GOOD</span></h2>'))
 
         # Checks done close logs.
         with open('scrapesites/templates/logs.html', 'a') as out:
-            out.write('{}\n{}\n{}\n{}\n'.format('--  All Sites Checked --', '</p>', '</body>', '</html>'))
+            out.write('{}\n{}\n{}\n{}\n{}\n{}\n{}\n'.format('--  All Sites Checked --', '</div>', '</p>', '<div class ="page-footer">', '<h5><a href="/admin">WebOps ___ </a></h5>', '</body>', '</html>'))
         # Record time it took to run checks so that it can be displayed in
         # pingdoms response time.
 
@@ -126,7 +128,7 @@ class Command(BaseCommand):
         for urllist in Urllist.objects.filter(broken_link_found=True,slack_sent=False):
             # import pdb; pdb.set_trace()
             if send_message(urllist.team):
-                Urllist.objects.filter(url=urllist.site_url).update(slack_sent=True)
+                Urllist.objects.filter(site_url=urllist.site_url).update(slack_sent=True)
             else:
                 print("Could not send slack message")
 
@@ -165,7 +167,7 @@ def load_broken_links_from_db(xml_out_1, xml_out_2, xml_out_5, response_time):
             count += 1
             out.write('{}{}{}\n'.format('Source Page: <font color="#000099">', current_row['source_url'], '</font><br/>'))
             out.write('{}{}{}\n\n'.format('Bad Link: <font color="#990000">', current_row['broken_link'].replace('<', '&lt;').replace('>', '&gt;'), '</font><br/><br/>'))
-            print(current_row)
+            # print(current_row)
 
         out.write('{}{}\n'.format('</status>','<br/>'))
         xml_out_4 = "<response_time>%.2f</response_time>" % response_time

@@ -4,4 +4,4 @@ from scrapesites.send_to_slack import send_message
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        send_message('TEAM_DIRECTORY')
+        send_message('DIRECTORY')
