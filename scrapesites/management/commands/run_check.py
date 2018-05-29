@@ -138,7 +138,7 @@ def on_start_clear_db():
     # import pdb; pdb.set_trace()
     for current_row in Brokenlink.objects.all().values():
         if current_row['site_url'] not in Urllist.objects.values_list('site_url', flat=True):
-            Brokenlink.objects.filter(site=current_row['site_url']).delete()
+            Brokenlink.objects.filter(site_url=current_row['site_url']).delete()
 
 def on_start_get_status():
     # Check if url check table is empty
