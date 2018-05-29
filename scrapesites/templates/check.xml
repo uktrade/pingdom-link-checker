@@ -11,40 +11,6 @@ Bad Link: <font color="#990000">&lt;a href="/articles/make-a-local-website-mirro
 Source Page: <font color="#000099">from https://www.createdbypete.com/articles/installing-gitlab-on-mac-os-x-and-mac-os-x-server/</font><br/>
 Bad Link: <font color="#990000">&lt;a href="https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install...</font><br/><br/>
 
-</br><b><u>Website: http://www.deadlinkcity.com</u></b><br/>
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="error-page.asp?e=404"&gt;Errorcode 404&lt;/a&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="http://www.deadlinkcity.com/page-not-found.asp"&gt;Non-existent...</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="disallowed/disallowed.html"&gt;Missing, disallowed by robots.tx...</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;img height="15" longdesc="http://www.deadlinkcity.com/missing-img-lo...</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="disallowed/nonexistent.html"&gt;Missing, allowed by robots.txt&lt;/a&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="default.asp?r=5"&gt;302 redirection to an invalid link&lt;/a&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="default.asp?r=4"&gt;301 redirection to an invalid link&lt;/a&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;script src="http://www.deadlinkcity.com/missing-script-src.js"&gt;&lt;/scr...</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;link href="/missing-head-link-href.txt"/&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="default.asp?r=6"&gt;Double 301 redirection to an invalid link&lt;/a&gt;</font><br/><br/>
-
-Source Page: <font color="#000099">from http://www.deadlinkcity.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="default.asp?r=7"&gt;Double 302 redirection to an invalid link&lt;/a&gt;</font><br/><br/>
-
 </status><br/>
-<response_time>21440.83</response_time>
+<response_time>16660.35</response_time>
 </pingdom_http_custom_check>

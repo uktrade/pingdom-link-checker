@@ -36,27 +36,29 @@ class Command(BaseCommand):
 
             with open('scrapesites/templates/logs.html', 'a') as out:
                 out.write('{}{}{}{}'.format('<h2>', current_url.site_url, " - Supported by: ", current_url.team))
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             # output_results = crawl_with_options(["https://www.createdbypete.com"], {"show-source": True, "output": "/Users/jay/Documents/Work/DIT/Work/WebOps/pingdom-link-checker/"})
-            ignore_prefix = '--ignore=' + (os.environ.get('IGNORE_PREFIXES'))
+            # ignore_prefix = '--ignore=' + (os.environ.get('IGNORE_PREFIXES'))
+            ignore_prefix = '--ignore=' + current_url.ignore_prefix
             scan_results = subprocess.run(['pylinkvalidate.py', \
-                        '--depth=4', \
-                        '--workers=10', \
-                        '--show-source', \
-                        '--console', \
-                        #'--types=a', \
-                        '--test-outside', \
-                        '--parser=lxml', \
-                        '--header=\'Connection: keep-alive\'', \
-                        '--header=\'Pragma: no-cache\'', \
-                        '--header=\'Cache-Control: no-cache\'', \
-                        '--header=\'Upgrade-Insecure-Requests: 1\'', \
-                        '--header=\'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\'', \
-                        '--header=\'DNT: 1\'', \
-                        '--header=\'Accept-Encoding: gzip, deflate\'', \
-                        '--header=\'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36\'', \
-                        ignore_prefix, \
-                        current_url.site_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            '--depth=4', \
+                            '--workers=10', \
+                            '--show-source', \
+                            '--console', \
+                            #'--types=a', \
+                            '--test-outside', \
+                            '--parser=lxml', \
+                            '--header=\'Connection: keep-alive\'', \
+                            '--header=\'Pragma: no-cache\'', \
+                            '--header=\'Cache-Control: no-cache\'', \
+                            '--header=\'Upgrade-Insecure-Requests: 1\'', \
+                            '--header=\'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\'', \
+                            '--header=\'DNT: 1\'', \
+                            '--header=\'Accept-Encoding: gzip, deflate\'', \
+                            '--header=\'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36\'', \
+                            ignore_prefix, \
+                            #'--ignore="https://www.createdbypete.com/articles/simple-way-to-find-broken-links-with-wget"', \
+                            current_url.site_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             scan_result_list = scan_results.stdout.decode('utf-8').split('\n')
             # print (scan_result_list)
             for item in scan_result_list:

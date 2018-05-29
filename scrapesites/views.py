@@ -8,3 +8,6 @@ def url_search_results(request):
 
 def logs(request):
     return render(request, 'logs.html', {})
+
+def scan(request):
+    return render(request, 'scan-base.html', {})

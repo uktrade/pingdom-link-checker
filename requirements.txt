@@ -4,3 +4,4 @@ psycopg2==2.7.4
 psycopg2-binary==2.7.4
 pylinkvalidator==0.3
 pytz==2018.4
+lxml==4.2.1

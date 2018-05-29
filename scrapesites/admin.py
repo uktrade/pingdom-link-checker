@@ -9,7 +9,7 @@ class broken_link_admin(admin.ModelAdmin):
 
 @admin.register(Urllist)
 class url_list_admin(admin.ModelAdmin):
-	list_display = ('site_url', 'team', 'enable', 'broken_link_found', 'slack_sent')
+	list_display = ('site_url', 'team', 'enable', 'broken_link_found', 'slack_sent', 'ignore_prefix')
 
 @admin.register(Responsetime)
 class response_time_admin(admin.ModelAdmin):
