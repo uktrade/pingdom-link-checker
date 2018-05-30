@@ -37,12 +37,12 @@ body {
     color: #000000;
 }
 
-.good {
+.GOOD {
         color: #19732A;
         font-size: 18pt;
       }
 
-.failed {
+.FAILED {
           color: #D12626;
           font-size: 18pt;
         }

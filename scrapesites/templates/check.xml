@@ -9,9 +9,9 @@
         <p>Bad Link: <font color="#990000">{{ current_url.broken_link }}</font></p>
     {% endfor %}
 {% else %}
-    <p>Ok</p>
+Ok
 {% endif %}
 
 </status>
-<response_time>16065.23</response_time>
+<response_time>{{ response_time }}</response_time>
 </pingdom_http_custom_check>

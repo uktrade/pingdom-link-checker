@@ -15,14 +15,13 @@
 {% if broken_links %}
 
     {% for current_url in broken_links %}
-        <h2>{% ifchanged current_url.site_url %} {{ current_url.site_url }} - Supported by: {{ current_url.temp_url.team }}{% endifchanged %}</h2>
-        <p>Source Page: <font color="#000099">{{ current_url.source_url }}</font></p>
-        <p>Bad Link: <font color="#990000">{{ current_url.broken_link }}</font></p>
+        <h2>{% ifchanged current_url.site_url %} {{ current_url.site_url }} - Supported by: {{ current_url.temp_url.team }} - <span class={% if current_url.temp_url.broken_link_found %}FAILED{% else %}GOOD{% endif %}>{% if current_url.temp_url.broken_link_found %}FAILED{% else %}GOOD{% endif %}</span>{% endifchanged %}</h2>
+        <h3>Source Page: {{ current_url.source_url }}</h3>
+        <h4>Broken Link: {{ current_url.broken_link }}</h4>
     {% endfor %}
 
 {% endif %}
 
---  All Sites Checked --
 </div>
 </p>
 <div class ="page-footer">
