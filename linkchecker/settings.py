@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'linkchecker.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 #     'default': {
 #         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'
