@@ -1,13 +1,18 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .models import Brokenlink
+
 
 # Create your views here.
 def url_search_results(request):
-    return render(request, 'check.xml', {})
+	broken_links = Brokenlink.objects.all()
+	context = {'broken_links': broken_links}
+	return render(request, 'check.xml', context)
 
 def logs(request):
-    return render(request, 'logs.html', {})
+	broken_links = Brokenlink.objects.all()
+	context = {'broken_links': broken_links}
+	return render(request, 'logs.html', context)
 
 def scan(request):
     return render(request, 'scan-base.html', {})

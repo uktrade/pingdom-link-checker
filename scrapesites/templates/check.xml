@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pingdom_http_custom_check>
 <status>
-<b><u>Website: https://www.createdbypete.com</u></b><br/>
-Source Page: <font color="#000099">from https://www.createdbypete.com</font><br/>
-Bad Link: <font color="#990000">&lt;a href="https://plus.google.com/+PeterRhoades" rel="me" title="Follo...</font><br/><br/>
+{% if broken_links %}
 
-Source Page: <font color="#000099">from https://www.createdbypete.com/articles/simple-way-to-find-broken-links-with-wget/</font><br/>
-Bad Link: <font color="#990000">&lt;a href="/articles/make-a-local-website-mirror-with-wget/"&gt;mirror and...</font><br/><br/>
+    {% for current_url in broken_links %}
+        <b>{% ifchanged current_url.site_url %}<u>Website: {{ current_url.site_url }} </u>{% endifchanged %}</b>
+        <p>Source Page: <font color="#000099">{{ current_url.source_url }}</font></p>
+        <p>Bad Link: <font color="#990000">{{ current_url.broken_link }}</font></p>
+    {% endfor %}
+{% else %}
+    <p>Ok</p>
+{% endif %}
 
-Source Page: <font color="#000099">from https://www.createdbypete.com/articles/installing-gitlab-on-mac-os-x-and-mac-os-x-server/</font><br/>
-Bad Link: <font color="#990000">&lt;a href="https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install...</font><br/><br/>
-
-</status><br/>
+</status>
 <response_time>16065.23</response_time>
 </pingdom_http_custom_check>

@@ -5,7 +5,10 @@ from .models import Brokenlink, Urllist, Responsetime
 
 @admin.register(Brokenlink)
 class broken_link_admin(admin.ModelAdmin):
-	list_display = ('site_url', 'source_url', 'broken_link')
+	list_display = ('site_url', 'source_url', 'broken_link', 'display_team')
+
+	def display_team(self, obj):
+		return obj.temp_url.team
 
 @admin.register(Urllist)
 class url_list_admin(admin.ModelAdmin):
