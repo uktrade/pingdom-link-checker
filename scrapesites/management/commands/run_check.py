@@ -16,7 +16,7 @@ class Command(BaseCommand):
         on_start_clear_db()
 
         # Read previous status of links from table.
-        on_start_get_status()
+        # on_start_get_status()
         # import pdb; pdb.set_trace()
 
         print('Link check now running ...')
@@ -92,7 +92,8 @@ class Command(BaseCommand):
                                 Brokenlink.objects.get_or_create(
                                     site_url=current_url.site_url,
                                     source_url=source_url,
-                                    broken_link=broken_link,)
+                                    broken_link=broken_link,
+                                    temp_url=urrent_url.site_url)
                             except:
                                 print("entry exists")
                             # with open('scrapesites/templates/logs.html', 'a') as out:
