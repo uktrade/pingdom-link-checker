@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pingdom_http_custom_check>
-<status>{% if broken_links %}
-    {% for current_url in broken_links %}
-        <b>{% ifchanged current_url.site_url %}<u>Website: {{ current_url.site_url }} </u>{% endifchanged %}</b>
-        <p>Source Page: <font color="#000099">{{ current_url.source_url }}</font></p>
-        <p>Bad Link: <font color="#990000">{{ current_url.broken_link }}</font></p>
-    {% endfor %}
+<status>
+{% if is_ok %}
+	OK
 {% else %}
-OK
-{% endif %}</status>
+	{% for link in broken_links %}
+		<b>{% ifchanged link.site_url %}
+				<u>Website: {{ link.site_url }}</u>
+			{% endifchanged %}</b>
+        <p>Source Page: <font color="#000099">{{ link.source_url }}</font></p>
+		<p>Bad Link: <font color="#990000">{{ link.broken_link }}</font></p>
+	{% endfor %}
+{% endif %}
+</status>
 <response_time>{{ response_time }}</response_time>
 </pingdom_http_custom_check>

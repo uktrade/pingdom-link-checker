@@ -1,31 +1,43 @@
 {% load staticfiles %}
 <html>
 <head>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="{% static "css/scrapesites.css" %}">
-<title>Link check - logs</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static "css/scrapesites.css" %}">
+	<title>Link check - logs</title>
 </head>
 <body>
-<div class ="page-header">
-<h1>Link check - logs</h1>
-</div>
-<div class ="page-body">
-<p>
-
-{% if broken_links %}
-
-    {% for current_url in broken_links %}
-        <h2>{% ifchanged current_url.site_url %} {{ current_url.site_url }} - Supported by: {{ current_url.temp_url.team }} - <span class={% if current_url.temp_url.broken_link_found %}FAILED{% else %}GOOD{% endif %}>{% if current_url.temp_url.broken_link_found %}FAILED{% else %}GOOD{% endif %}</span>{% endifchanged %}</h2>
-        <h3>Source Page: {{ current_url.source_url }}</h3>
-        <h4>Broken Link: {{ current_url.broken_link }}</h4>
-    {% endfor %}
-
-{% endif %}
-
-</div>
-</p>
-<div class ="page-footer">
-<h5><a href="/admin">WebOps ___ </a></h5>
+	<div class ="page-header">
+		<h1>Link check - logs</h1>
+	</div>
+	<div class ="page-body">
+		<p>
+		{% if url_list %}
+	    	{% for current_url in url_list %}
+	    		{% if current_url.enable %}
+		        	<h2> 
+		        		{{ current_url.site_url }} - Supported by: {{ current_url.temp_url.team }} - <span class=
+		        		{% if current_url.broken_link_found %}FAILED
+		        			{% else %}GOOD
+		        		{% endif %}>
+		        		{% if current_url.broken_link_found %}FAILED
+		        			{% else %}GOOD
+		        		{% endif %}</span>
+		       		</h2>
+					{% if current_url.broken_link_found %}
+						{% for brokenlink_url in broken_links %}
+							{% if current_url.site_url == brokenlink_url.site_url %}
+								<h3>Source Page: {{ brokenlink_url.source_url }}</h3>
+								<h4>Broken Link: {{ brokenlink_url.broken_link }}</h4>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% endif %}
+	    	{% endfor %}
+		{% endif %}
+		</p>
+	</div>
+	<div class ="page-footer">
+		<h5><a href="/admin">WebOps ___ </a></h5>
+	</div>
 </body>
 </html>
-<h2>https://www.createdbypete.com - Supported by: DIRECTORY<h2>https://find-a-buyer.export.great.gov.uk - Supported by: DIRECTORY<h2>https://contact-us.export.great.gov.uk - Supported by: DIRECTORY<h2>https://find-a-buyer.export.great.gov.uk - Supported by: DIRECTORY<h2>https://find-a-buyer.export.great.gov.uk - Supported by: DIRECTORY<h2>https://www.createdbypete.com - Supported by: IIGB
