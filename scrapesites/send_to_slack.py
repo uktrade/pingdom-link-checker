@@ -1,12 +1,13 @@
 import os
 import json
 from urllib import request
+from scrapesites.models import Urllist
 
 def send_message(team):
-    # Read team from shell
-    team_slack_url = (os.environ.get('SLACK_' + team))
-    slack_message = team + ': Broken links have been found on your site please investigate'
+    # Read slack url from table
     # import pdb; pdb.set_trace()
+    team_slack_url = Urllist.objects.get(team=team).slack_url
+    slack_message = team + ': Broken links have been found on your site please investigate'
     if team_slack_url:
         print(slack_message)
         # print('URL: ' + team_slack_url)
