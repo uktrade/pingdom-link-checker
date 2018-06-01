@@ -5,7 +5,7 @@ from django.db import models
 class Urllist(models.Model):
     site_url = models.URLField()
     team = models.CharField(max_length=60)
-    slack_url = models.URLField()
+    # slack_url = models.URLField()
     enable = models.BooleanField(default=True)
     broken_link_found = models.BooleanField(default=False)
     slack_sent = models.BooleanField(default=False)
