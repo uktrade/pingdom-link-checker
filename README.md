@@ -1,19 +1,17 @@
 # pingdom-link-checker
 
 About:
-This is a python script that will recursively check all link on a website and reports a failure in an XML file for Pingdom to read.  A list of websites to check are in a file that can be updated as required.  This app uses the flask framework to display the results as an xml file and will also log the site status on a page.
+This is a python script that will recursively check all link on a website and reports a failure in an XML file for Pingdom to read.  A list of websites to check are in a file that can be updated as required.  This app uses the django framework to display the results as an xml file and will also log the site status on a page.
 
 How to use:
 Run with
-		python run.py
+		python manage.py runserver 8080
 
-This is deployed onto Heroku with the following parameters:
-		web: python run.py
-In Heroku you must configure a variable for how often you wish to run the script (in seconds). The recommended value is - CHECK_INTERVAL = 300
+This is deployed onto UK Gov PaaS. 
 
 Site list:
-A list of URLs are in the file "url_list"
-You can hash/comment out any url you wish to temporarily remove.
+A list of URLs are stored in a PostgresDB Table, you can access the table from the Django admin.
+You can diable any url you wish to temporarily remove.
 
 Script output:
 		<?xml version="1.0" encoding="UTF-8"?>
