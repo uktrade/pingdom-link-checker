@@ -43,7 +43,7 @@ class Command(BaseCommand):
                             '--header=Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', \
                             '--header=DNT: 1', \
                             '--header=Accept-Encoding: gzip, deflate', \
-                            '--header=User-Agent: dit-linkchecker', \
+                            '--header=User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.117 Safari/537.36 link-checker-ops', \
                             ignore_prefix, \
                             current_url.site_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             scan_result_list = scan_results.stdout.decode('utf-8').split('\n')
