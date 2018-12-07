@@ -30,7 +30,7 @@ class Command(BaseCommand):
             ignore_prefix = '--ignore=' + current_url.ignore_prefix
             scan_results = subprocess.run(['pylinkvalidate.py', \
                             '--depth=4', \
-                            '--workers=10', \
+                            '--workers=2', \
                             '--show-source', \
                             '--console', \
                             #'--types=a', \
