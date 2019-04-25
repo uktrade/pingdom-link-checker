@@ -18,6 +18,8 @@ class Command(BaseCommand):
         print('Link check now running ...')
 
         dead_link_found = False
+        dead_link_list = []#{'list':[]}
+
         t0 = time.time()
 
         # Loop through URL list and run link check.
@@ -56,6 +58,7 @@ class Command(BaseCommand):
                     # import pdb; pdb.set_trace()
                     count_404 += 1
                     dead_link_found = True
+
                     Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=True)
 
                     # Record all the source and broken links and write to table and log file if unique.
@@ -66,6 +69,8 @@ class Command(BaseCommand):
                         if (scan_result_list[x]).lstrip(' ').startswith('<'):
                             print('Broken Link: ' + scan_result_list[x].lstrip(' ').rstrip("\n"))
                             broken_link = scan_result_list[x].lstrip(' ').rstrip("\n")
+                            #import pdb; pdb.set_trace()
+                            dead_link_list.append([current_url.site_url, source_url, broken_link])
                             try:
                                 # import pdb; pdb.set_trace()
                                 Brokenlink.objects.get_or_create(
@@ -75,15 +80,25 @@ class Command(BaseCommand):
                                     temp_url=current_url,)
                             except:
                                 print("entry exists")
-                            
-            # Clear checked url from table if no 404's found.
+
+            # Clear checked site url from table if no 404's found.
             if count_404 == 0:
                 # import pdb; pdb.set_trace()
                 Brokenlink.objects.filter(site_url=current_url.site_url).delete()
                 Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=False, slack_sent=False)
                 # maybe send all clear slack?
-               
-        
+        #import pdb; pdb.set_trace()
+
+        # Clear individual fixed links from table
+        #import pdb; pdb.set_trace()
+        brokenlink_iterator = Brokenlink.objects.values_list('site_url', 'source_url', 'broken_link').iterator()
+        for x in brokenlink_iterator:
+            checking_item = list(x)
+            #print (checking_item)
+            if checking_item not in dead_link_list:
+                #print ("delete this")
+                Brokenlink.objects.filter(site_url=checking_item[0], source_url=checking_item[1], broken_link=checking_item[2]).delete()
+
         # Record time it took to run checks so that it can be displayed in
         # pingdoms response time.
         t1 = time.time()
@@ -112,8 +127,7 @@ class Command(BaseCommand):
 
 
 def on_start_clear_db():
-    # import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
     for current_row in Brokenlink.objects.all().values():
         if current_row['site_url'] not in Urllist.objects.values_list('site_url', flat=True):
             Brokenlink.objects.filter(site_url=current_row['site_url']).delete()
-
