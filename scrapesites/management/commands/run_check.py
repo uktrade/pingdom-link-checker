@@ -48,6 +48,9 @@ class Command(BaseCommand):
                             current_url.site_url], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             scan_result_list = scan_results.stdout.decode('utf-8').split('\n')
 
+            # Clear table to get fresh list.
+            Brokenlink.objects.filter(site_url=current_url.site_url).delete()
+
             # Check the scan results for broken links, 404s
             for item in scan_result_list:
                 current_item_pos += 1
@@ -75,15 +78,15 @@ class Command(BaseCommand):
                                     temp_url=current_url,)
                             except:
                                 print("entry exists")
-                            
+
             # Clear checked url from table if no 404's found.
             if count_404 == 0:
                 # import pdb; pdb.set_trace()
-                Brokenlink.objects.filter(site_url=current_url.site_url).delete()
+                # Brokenlink.objects.filter(site_url=current_url.site_url).delete()
                 Urllist.objects.filter(site_url=current_url.site_url).update(broken_link_found=False, slack_sent=False)
                 # maybe send all clear slack?
-               
-        
+
+
         # Record time it took to run checks so that it can be displayed in
         # pingdoms response time.
         t1 = time.time()
@@ -116,4 +119,3 @@ def on_start_clear_db():
     for current_row in Brokenlink.objects.all().values():
         if current_row['site_url'] not in Urllist.objects.values_list('site_url', flat=True):
             Brokenlink.objects.filter(site_url=current_row['site_url']).delete()
-
