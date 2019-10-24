@@ -34,7 +34,7 @@ class Command(BaseCommand):
                             '--show-source', \
                             '--console', \
                             #'--types=a', \
-                            '--test-outside', \
+                            #'--test-outside', \
                             '--parser=lxml', \
                             '--header=Connection: keep-alive', \
                             '--header=Pragma: no-cache', \
