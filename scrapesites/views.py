@@ -1,29 +1,31 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
+from scrapesites.helper.DB import RecordManager
 
-from .models import Brokenlink, Responsetime, Urllist
+
+class HomeView(TemplateView):
+    template_name = 'pingdom_check.xml'
+    dbManager = RecordManager()
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        if self.dbManager.has_deadlinks():
+            context['sites'] = self.dbManager.getActiveSitesWithBrokenLinks()
+            context['brokenLinks'] = self.dbManager.getAllBrokenLinks()
+        return context
 
 
-# Create your views here.
-def url_search_results(request):
-	# broken_links = Brokenlink.objects.all()
-	response_time = Responsetime.objects.get(id=1).response_time
-	url_list = Urllist.objects.all()
-	
+class LogsView(TemplateView):
+    template_name = 'logs.html'
+    dbManager = RecordManager()
 
-	# context['status'] = not any(x.temp_url.enable for x in Brokenlink.objects.all())
+    def get_context_data(self, **kwargs):
+        context = super(LogsView, self).get_context_data(**kwargs)
+        context['title'] = 'Link check - logs'
+        if self.dbManager.has_deadlinks():
+            context['sites'] = self.dbManager.getActiveSites()
+            context['brokenLinks'] = self.dbManager.getAllBrokenLinks()
+        return context
 
-	broken_links = [x for x in Brokenlink.objects.all() if x.temp_url.enable]
-	is_ok = len(broken_links) == 0
 
-	context = {'broken_links': broken_links, 'url_list': url_list, 'response_time': response_time, 'is_ok': is_ok}
-
-	return render(request, 'check.xml', context)
-
-def logs(request):
-	broken_links = Brokenlink.objects.all()
-	url_list = Urllist.objects.all()
-	context = {'broken_links': broken_links, 'url_list': url_list}
-	return render(request, 'logs.html', context)
-
-def scan(request):
-    return render(request, 'scan-base.html', {})
+    # def scan(request):
+    #     return render(request, 'scan-base.html', {})

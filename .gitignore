@@ -1,11 +1,30 @@
-# Byte-compiled / optimized / DLL files
+
+# Created by https://www.gitignore.io/api/django
+# Edit at https://www.gitignore.io/?templates=django
+
+### Django ###
+*.log
+*.pot
+*.pyc
 __pycache__/
+local_settings.py
+*.sqlite3
+media
+
+# If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
+# in your Git repository. Update and uncomment the following line accordingly.
+# <django-project-name>/staticfiles/
+
+### Django.Python Stack ###
+# Byte-compiled / optimized / DLL files
 *.py[cod]
 *$py.class
 
+# C extensions
+*.so
+
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -17,9 +36,13 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -31,41 +54,80 @@ var/
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+
 # Django stuff:
-*.log
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
 
 # PyBuilder
 target/
 
-dead_link.log
-*.gov.uk
-url_status.json
-.idea/
+# Jupyter Notebook
+.ipynb_checkpoints
 
-.direnv/
+# IPython
+profile_default/
+ipython_config.py
 
-# OSX
+# pyenv
+.python-version
 
-*.DS_Store
-.AppleDouble
-.LSOverride
+# celery beat schedule file
+celerybeat-schedule
 
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
+# SageMath parsed files
+*.sage.py
 
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Dynamically created
+# Environments
+.env
 .venv
-staticfiles
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# VSCode config
+.vscode/
+# End of https://www.gitignore.io/api/django
