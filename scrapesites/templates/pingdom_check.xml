@@ -8,6 +8,7 @@
 					{%if site.site_url == link.site_url %}
 						<p>Source Page: <font color="#000099">{{ link.source_url }}</font>/p>
 						<p>Bad Link: <font color="#990000">{{ link.broken_link }}</font></p>
+						<p>Down Time: <font color="#990000">{{ link.created_at|timesince }}</font></p>
 					{% endif %}
 				{% endfor %}
 			{% endfor %}

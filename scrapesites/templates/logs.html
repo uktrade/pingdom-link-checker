@@ -13,6 +13,7 @@
 					{% if site.site_url == link.site_url %}
 						<h3>Source Page: {{ link.source_url }}</h3>
 						<h4>Broken Link: {{ link.broken_link }}</h4>
+						<h4>Down Time: {{ link.created_at|timesince }}</h4>
 					{% endif %}
 				{% endfor %}
 			{% endif %}
