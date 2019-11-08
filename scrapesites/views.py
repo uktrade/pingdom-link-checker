@@ -29,7 +29,6 @@ class LogsView(TemplateView):
 
 
 class GeckoBoard(JSONResponseMixin, DetailView):
-    template_name = 'report.json'
     dbManager = RecordManager()
     timeString = HumanReadable()
     team = ''
