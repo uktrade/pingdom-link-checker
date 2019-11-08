@@ -24,9 +24,16 @@ If Pingodm recives a status of OK the it will report site is up.  Anything else 
 
 Logs:
 Browsing to /logs.html will show you the the status of each individual site, this can be used to determine which site failed and what link is failing. eg. 
-		https://pingdom-link-checker.ukti.io/logs.html
+		https://pingdom-link-checker.london.cloudapps.digital/logs.html
+
+Geckoboard Pull request endpoints:
+All Sites
+https://pingdom-link-checker.london.cloudapps.digital/gecko/
+
+TeamSpecific(provided team exists in site DB)
+https://pingdom-link-checker.london.cloudapps.digital/gecko?team=directory
 
 To Do -
 Refresh:
 The script is scheduled to run at a set interval, however you can manually refresh the app.  this can be useful if you had an alert for a failure and what to check the status immediately.  This is done by adding a /refresh to the end of the url. eg. 
-		https://pingdom-link-checker.ukti.io/refresh
+		https://pingdom-link-checker.london.cloudapps.digital/refresh

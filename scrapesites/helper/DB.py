@@ -12,6 +12,10 @@ class RecordManager:
     def getActiveSitesWithBrokenLinks(self):
         return self.sites().filter(enable=True, broken_link_found=True)
 
+    def getActiveSitesForTeam(self, team=None):
+        team = team or ''
+        return self.sites().filter(enable=True, team__icontains=team)
+
     def getAllBrokenLinks(self):
          return Brokenlink.objects.all()
 
@@ -37,6 +41,11 @@ class RecordManager:
 
     def has_deadlinks(self):
         if self.sites().filter(broken_link_found=True).values_list('broken_link_found'):
+            return True
+        return False
+
+    def has_team(self, team=None):
+        if self.sites().filter(team__icontains=team).values_list('team'):
             return True
         return False
 

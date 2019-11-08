@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import time
 from scrapesites.helper.crawler import Scanner
 from scrapesites.helper.DB import RecordManager as dbManager
-from scrapesites.send_to_slack import send_message
+from scrapesites.helper.send_to_slack import send_message
 
 
 class Command(BaseCommand):

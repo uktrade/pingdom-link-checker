@@ -1,5 +1,6 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from scrapesites.helper.DB import RecordManager
+from braces.views import JSONResponseMixin
 
 
 class HomeView(TemplateView):
@@ -15,7 +16,7 @@ class HomeView(TemplateView):
 
 
 class LogsView(TemplateView):
-    template_name = 'logs.html'
+
     dbManager = RecordManager()
 
     def get_context_data(self, **kwargs):
@@ -27,5 +28,49 @@ class LogsView(TemplateView):
         return context
 
 
-    # def scan(request):
-    #     return render(request, 'scan-base.html', {})
+class GeckoBoard(JSONResponseMixin, DetailView):
+    template_name = 'report.json'
+    dbManager = RecordManager()
+    team = ''
+
+    def get(self, request, *args, **kwargs):
+
+        if 'team' in self.request.GET:
+            self.team = self.request.GET['team']
+
+        context_dict = self.makeReport(team=self.team)
+
+        return self.render_json_response(context_dict)
+
+    def makeReport(self, team=None):
+        geckoList = []
+
+        if team and self.teamExists(team=team):
+            sites = self.dbManager.getActiveSitesForTeam(team=team)
+        else:
+            sites = self.dbManager.getActiveSites()
+
+        for site in sites:
+            site_description = 'It is all Sunny here!'
+            colour = 'green'
+
+            if site.broken_link_found:
+                site_description = 'It is Bit Cloudy here'
+                colour = 'red'
+
+            geckoList.append(
+                {"title": {"text": site.site_url},
+                           "label": {"name": "WebSite", "color": f'{colour}'},
+                           "description": f"{site_description}"
+                })
+            if site.broken_link_found:
+                for link in self.dbManager.getBrokenLinksForSite(site=site.site_url):
+                    geckoList.append(
+                        {"title": {"text": link.source_url},
+                         "label": {"name": "Source", "color": "amber" },
+                         "description": f"{link.broken_link}"
+                         })
+        return geckoList
+
+    def teamExists(self,team=None):
+        return self.dbManager.has_team(team=team)
