@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, DetailView
 from scrapesites.helper.DB import RecordManager
+from scrapesites.helper.date import HumanReadable
 from braces.views import JSONResponseMixin
-
 
 class HomeView(TemplateView):
     template_name = 'pingdom_check.xml'
@@ -31,6 +31,7 @@ class LogsView(TemplateView):
 class GeckoBoard(JSONResponseMixin, DetailView):
     template_name = 'report.json'
     dbManager = RecordManager()
+    timeString = HumanReadable()
     team = ''
 
     def get(self, request, *args, **kwargs):
@@ -65,10 +66,11 @@ class GeckoBoard(JSONResponseMixin, DetailView):
                 })
             if site.broken_link_found:
                 for link in self.dbManager.getBrokenLinksForSite(site=site.site_url):
+                    downtime = self.timeString.EclapsedTime(created_at=link.created_at)
                     geckoList.append(
                         {"title": {"text": link.source_url},
                          "label": {"name": "Source", "color": "amber" },
-                         "description": f"{link.broken_link}"
+                         "description":f"Downtime: {downtime} Brokenlink: {link.broken_link}"
                          })
         return geckoList
 
