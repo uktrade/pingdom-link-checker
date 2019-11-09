@@ -29,8 +29,8 @@ env = environ.Env(
 
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
-GECKO_TOKEN = env('GECKO_TOKEN')
-
+CRAWLER_WORKER = env('CRAWLER_WORKER')
+CRAWLER_SEARCH_DEPTH = env('CRAWLER_SEARCH_DEPTH')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/

@@ -1,18 +1,19 @@
 import time
 from pylinkvalidator.api import crawl_with_options
+from django.conf import settings
 
 
 class Scanner:
 
     def run(self, site, ignore_prefix="", team=None):
         errors = set()
-        print("Scanning: {} is Supported by {}".format(site, team))
+        print("Scanning: {},it is Supported by {}".format(site, team))
 
         crawl_site = crawl_with_options(
             [site],
             {
-                "workers": 10,
-                "depth": 4,
+                "workers": settings.CRAWLER_WORKER,
+                "depth": settings.CRAWLER_SEARCH_DEPTH,
                 "show-source": True,
                 "header": {
                     "Connection": "keep-alive",
