@@ -12,22 +12,34 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import dj_database_url
+import environ
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ENV_FILE = os.path.join(BASE_DIR, '.env')
+
+if os.path.exists(ENV_FILE):
+    environ.Env.read_env(ENV_FILE)
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    RESTRICT_ADMIN=(bool, False)
+)
+
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+CRAWLER_WORKER = env('CRAWLER_WORKER')
+CRAWLER_SEARCH_DEPTH = env('CRAWLER_SEARCH_DEPTH')
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if (os.getenv('DEBUG') == 'true') else False
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -75,23 +87,18 @@ WSGI_APPLICATION = 'linkchecker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+if 'VCAP_SERVICES' in os.environ:
+    services = json.loads(os.getenv('VCAP_SERVICES'))
+    DATABASE_URL = services['postgres'][0]['credentials']['uri']
+else:
+    DATABASE_URL = os.getenv('DATABASE_URL')
+
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config()
 }
-#     'default': {
-#         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         # Or path to database file if using sqlite3
-#         'NAME': (os.getenv('DB_NAME')),
-#         # The following settings are not used with sqlite3
-#         'USER': (os.getenv('DB_USER')),
-#         'PASSWORD': (os.getenv('DB_PASSWORD')),
-#         # localhost is necessary for PostgreSQL 9.2
-#         'HOST': (os.getenv('DB_HOST')),
-#         # Set to empty string for default
-#         'PORT': '',
-#     }
-# }
 
 
 # Password validation

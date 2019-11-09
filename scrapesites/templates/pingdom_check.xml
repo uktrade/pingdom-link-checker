@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pingdom_http_custom_check>
+	<status>
+		{% if sites %}
+			{% for site in sites %}
+				<u>Website: {{ site.site_url }} </u>
+				{% for link in brokenLinks %}
+					{%if site.site_url == link.site_url %}
+						<p>Source Page: <font color="#000099">{{ link.source_url }}</font>/p>
+						<p>Bad Link: <font color="#990000">{{ link.broken_link }}</font></p>
+						<p>Down Time: <font color="#990000">{{ link.created_at|timesince }}</font></p>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		{% else %}
+			OK
+		{% endif %}
+	</status>
+	<response_time>{{ response_time }}</response_time>
+</pingdom_http_custom_check>

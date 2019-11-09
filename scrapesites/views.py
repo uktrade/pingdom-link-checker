@@ -1,29 +1,77 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView, DetailView
+from scrapesites.helper.DB import RecordManager
+from scrapesites.helper.date import HumanReadable
+from braces.views import JSONResponseMixin
 
-from .models import Brokenlink, Responsetime, Urllist
+class HomeView(TemplateView):
+    template_name = 'pingdom_check.xml'
+    dbManager = RecordManager()
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        if self.dbManager.has_deadlinks():
+            context['sites'] = self.dbManager.getActiveSitesWithBrokenLinks()
+            context['brokenLinks'] = self.dbManager.getAllBrokenLinks()
+        return context
 
 
-# Create your views here.
-def url_search_results(request):
-	# broken_links = Brokenlink.objects.all()
-	response_time = Responsetime.objects.get(id=1).response_time
-	url_list = Urllist.objects.all()
-	
+class LogsView(TemplateView):
 
-	# context['status'] = not any(x.temp_url.enable for x in Brokenlink.objects.all())
+    dbManager = RecordManager()
 
-	broken_links = [x for x in Brokenlink.objects.all() if x.temp_url.enable]
-	is_ok = len(broken_links) == 0
+    def get_context_data(self, **kwargs):
+        context = super(LogsView, self).get_context_data(**kwargs)
+        context['title'] = 'Link check - logs'
+        if self.dbManager.has_deadlinks():
+            context['sites'] = self.dbManager.getActiveSites()
+            context['brokenLinks'] = self.dbManager.getAllBrokenLinks()
+        return context
 
-	context = {'broken_links': broken_links, 'url_list': url_list, 'response_time': response_time, 'is_ok': is_ok}
 
-	return render(request, 'check.xml', context)
+class GeckoBoard(JSONResponseMixin, DetailView):
+    dbManager = RecordManager()
+    timeString = HumanReadable()
+    team = ''
 
-def logs(request):
-	broken_links = Brokenlink.objects.all()
-	url_list = Urllist.objects.all()
-	context = {'broken_links': broken_links, 'url_list': url_list}
-	return render(request, 'logs.html', context)
+    def get(self, request, *args, **kwargs):
 
-def scan(request):
-    return render(request, 'scan-base.html', {})
+        if 'team' in self.request.GET:
+            self.team = self.request.GET['team']
+
+        context_dict = self.makeReport(team=self.team)
+
+        return self.render_json_response(context_dict)
+
+    def makeReport(self, team=None):
+        geckoList = []
+
+        if team and self.teamExists(team=team):
+            sites = self.dbManager.getActiveSitesForTeam(team=team)
+        else:
+            sites = self.dbManager.getActiveSites()
+
+        for site in sites:
+            site_description = 'It is all Sunny here!'
+            colour = 'green'
+
+            if site.broken_link_found:
+                site_description = 'It is Bit Cloudy here'
+                colour = 'red'
+
+            geckoList.append(
+                {"title": {"text": site.site_url},
+                           "label": {"name": "WebSite", "color": f'{colour}'},
+                           "description": f"{site_description}"
+                })
+            if site.broken_link_found:
+                for link in self.dbManager.getBrokenLinksForSite(site=site.site_url):
+                    downtime = self.timeString.EclapsedTime(created_at=link.created_at)
+                    geckoList.append(
+                        {"title": {"text": link.source_url},
+                         "label": {"name": "Source", "color": "amber" },
+                         "description":f"Downtime: {downtime} Brokenlink: {link.broken_link}"
+                         })
+        return geckoList
+
+    def teamExists(self,team=None):
+        return self.dbManager.has_team(team=team)

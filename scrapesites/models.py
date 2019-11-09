@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Urllist(models.Model):
     site_url = models.URLField()
     team = models.CharField(max_length=60)
@@ -14,11 +15,14 @@ class Urllist(models.Model):
     def __str__(self):
         return self.site_url
 
+
 class Brokenlink(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     site_url = models.URLField()
     source_url = models.URLField()
     broken_link = models.TextField()
     temp_url = models.ForeignKey(Urllist, null=True, on_delete=models.CASCADE)
+
     class Meta:
         unique_together = ('site_url', 'source_url', 'broken_link')
 

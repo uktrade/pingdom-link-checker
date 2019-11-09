@@ -6,3 +6,5 @@ pylinkvalidator==0.3
 pytz==2018.4
 lxml==4.2.1
 dj-database-url==0.4.2
+django-environ==0.4.5
+django-braces==1.13.0
