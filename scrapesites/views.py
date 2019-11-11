@@ -68,7 +68,7 @@ class GeckoBoard(JSONResponseMixin, DetailView):
                     downtime = self.timeString.EclapsedTime(created_at=link.created_at)
                     geckoList.append(
                         {"title": {"text": link.source_url},
-                         "label": {"name": "Source", "color": "amber" },
+                         "label": {"name": "Source", "color": "#b5712b"},
                          "description":f"Downtime: {downtime} Brokenlink: {link.broken_link}"
                          })
         return geckoList
