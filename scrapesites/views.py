@@ -48,7 +48,7 @@ class GeckoBoard(JSONResponseMixin, DetailView):
         if team and self.teamExists(team=team):
             sites = self.dbManager.getActiveSitesForTeam(team=team)
         else:
-            sites = self.dbManager.getActiveSites()
+            sites = self.dbManager.getActiveSitesWithBrokenLinks()
 
         for site in sites:
             site_description = 'It is all Sunny here!'
