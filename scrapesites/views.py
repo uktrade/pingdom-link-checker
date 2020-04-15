@@ -75,3 +75,29 @@ class GeckoBoard(JSONResponseMixin, DetailView):
 
     def teamExists(self,team=None):
         return self.dbManager.has_team(team=team)
+
+class GeckoBrokenLinkCount(JSONResponseMixin, DetailView):
+    dbManager = RecordManager()
+
+    def get(self, request, *args, **kwargs):
+
+        current_broekn_links = self.dbManager.getAllBrokenLinks().count()
+        all_links = self.dbManager.getActiveSites().count()
+
+        context_dict = self.makeReport(min=0,max=all_links,current=current_broekn_links)
+
+        return self.render_json_response(context_dict)
+
+
+    def makeReport(self,min=0,max=100,current=0):
+        report = {
+            "item": current,
+            "min": {
+                "value": min,
+            },
+            "max":{
+                "value": max
+            }
+        }
+
+        return report
