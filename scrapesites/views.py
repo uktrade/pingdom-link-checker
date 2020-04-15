@@ -82,22 +82,19 @@ class GeckoBrokenLinkCount(JSONResponseMixin, DetailView):
     def get(self, request, *args, **kwargs):
 
         current_broekn_links = self.dbManager.getAllBrokenLinks().count()
-        all_links = self.dbManager.getActiveSites().count()
-
-        context_dict = self.makeReport(min=0,max=all_links,current=current_broekn_links)
+    
+        context_dict = self.makeReport(current=current_broekn_links)
 
         return self.render_json_response(context_dict)
 
 
-    def makeReport(self,min=0,max=100,current=0):
+    def makeReport(self,current=0):
         report = {
-            "item": current,
-            "min": {
-                "value": min,
-            },
-            "max":{
-                "value": max
-            }
+            "item": [
+                {
+                 "text": str(current)
+                }
+            ]
         }
 
         return report
