@@ -1,3 +1,4 @@
 ---
 applications:
-- name: pingdom-link-checker
+  - name: pingdom-link-checker
+    stack: cflinuxfs4
