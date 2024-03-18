@@ -1,5 +1,5 @@
 beautifulsoup4==4.6.0
-Django==4.2.8
+Django==4.2.11
 psycopg2-binary==2.9.9
 pylinkvalidator==0.3
 pytz==2023.4
