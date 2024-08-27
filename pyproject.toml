@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "pingdom-link-checker"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+beautifulsoup4 = "4.6.0"
+django = "^4.2.8"
+psycopg2-binary = "2.9.9"
+pylinkvalidator = "0.3"
+pytz = "2023.4"
+lxml = "5.1.0"
+dj-database-url = "2.1.0"
+django-environ = "0.11.2"
+django-braces = "1.15.0"
+whitenoise = "6.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
